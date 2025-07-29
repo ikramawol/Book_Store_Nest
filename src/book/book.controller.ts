@@ -14,29 +14,29 @@ export class BookController {
     constructor(private readonly bookService: BookService){}
 
     @Post()
-    createBook(@Body() dto: CreateBookDto) {
-        return this.bookService.createBook(dto);
+    async createBook(@Body() dto: CreateBookDto) {
+        return await this.bookService.createBook(dto);
     }
 
     @Get()
-    getBooks() {
-        return this.bookService.getBooks();
+    async getBooks() {
+        return await this.bookService.getBooks();
     }
 
     @Get(':id')
-    getBookById(@Param('id', ParseIntPipe) id: number){
-        return this.bookService.getBookById(id);
+    async getBookById(@Param('id', ParseIntPipe) id: number){
+        return await this.bookService.getBookById(id);
     }
 
     @Put(':id')
-    updateBook(
+    async updateBook(
         @Param('id', ParseIntPipe) id: number,
         @Body() dto: UpdateBookDto){
-            return this.bookService.updateBook(id, dto);
+            return await this.bookService.updateBook(id, dto);
         }
     
     @Delete(':id')
-    deleteBook(@Param('id', ParseIntPipe)id: number){
-        return {message:'Book deleted successfully', book: this.bookService.deleteBook(id)};
+    async deleteBook(@Param('id', ParseIntPipe)id: number){
+        return {message:'Book deleted successfully', book: await this.bookService.deleteBook(id)};
     }
 }
