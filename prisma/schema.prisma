@@ -24,12 +24,21 @@ model Book{
   updatedAt DateTime @updatedAt
 }
 
-// model User {
-//   id Int @id @default(autoincrement())
-//   email String @unique
-//   username String
-//   password String
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
+model User {
+  id Int @id @default(autoincrement())
+  email String @unique
+  username String
+  role Role @default(USER)
+  hash String
+  hashedRt String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
+  @@map("users")
+}
+ 
+enum Role{
+  MEMBER
+  ADMIN
+  USER
+}

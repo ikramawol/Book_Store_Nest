@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient{
+    // public user = this['user'];
     constructor(){
         super({
            datasources:{
