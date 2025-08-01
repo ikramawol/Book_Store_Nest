@@ -7,27 +7,27 @@ import { UpdateBookDto } from './dto/update-book.dto';
 export class BookService{
     constructor(private readonly prisma: PrismaService){}
     
-    getBooks(){
-        return this.prisma.book.findMany();
+    async getBooks(){
+        return await this.prisma.book.findMany();
     }
 
-    getBookById(id: number){
-        return this.prisma.book.findUnique({ where: { id }});
+    async getBookById(id: number){
+        return await this.prisma.book.findUnique({ where: { id }});
     }
     
-    createBook( data: CreateBookDto){
-        return this.prisma.book.create({ data });
+    async createBook( data: CreateBookDto){
+        return await this.prisma.book.create({ data });
 
     }
 
-    updateBook(id: number, data: UpdateBookDto){
-        return this.prisma.book.update({
+    async updateBook(id: number, data: UpdateBookDto){
+        return await this.prisma.book.update({
             where: { id },
             data,
         });
     }
 
-    deleteBook(id: number){
-        return this.prisma.book.delete({ where: { id}});
+    async deleteBook(id: number){
+        return await this.prisma.book.delete({ where: { id}});
     }
 }

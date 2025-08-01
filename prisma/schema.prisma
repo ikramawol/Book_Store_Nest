@@ -22,6 +22,10 @@ model Book{
   author String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  userBooks UserBook[]
+  @@map("books")
+
 }
 
 model User {
@@ -34,7 +38,24 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  userBooks UserBook[]
   @@map("users")
+}
+
+// Explicit junction table with additional fields
+model UserBook {
+  id Int @id @default(autoincrement())
+  userId Int
+  bookId Int
+  purchasedAt DateTime @default(now())
+  purchasePrice Float?
+  isFavorite Boolean @default(false)
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, bookId])
+  @@map("user_books")
 }
  
 enum Role{
@@ -42,3 +63,4 @@ enum Role{
   ADMIN
   USER
 }
+

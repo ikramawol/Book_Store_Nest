@@ -5,12 +5,6 @@ import { PrismaClient } from '@prisma/client';
 export class PrismaService extends PrismaClient{
     // public user = this['user'];
     constructor(){
-        super({
-           datasources:{
-            db: {
-                url: process.env.DATABASE_URL
-            }
-           } 
-        });
+        super();
     }
 }
