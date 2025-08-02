@@ -3,6 +3,7 @@ import { BookService } from './book.service';
 import { CreateBookDto} from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Roles } from '../auth/common/decorators/roles.decorator';
+import { Public } from 'src/auth/common/decorators/indeex';
 
 @Controller('book')
 export class BookController {
@@ -20,11 +21,13 @@ export class BookController {
         return await this.bookService.createBook(dto);
     }
 
+    @Public()
     @Get()
     async getBooks() {
         return await this.bookService.getBooks();
     }
 
+    @Public()
     @Get(':id')
     async getBookById(@Param('id', ParseIntPipe) id: number){
         return await this.bookService.getBookById(id);

@@ -17,5 +17,7 @@ export class UserService{
         return await this.prismaService.user.update({ where: { id }, data });
     }
     
-    
+    async changeRole(id: string, role: string){
+        return await this.prismaService.user.update()
+    }
 }
