@@ -1,10 +1,11 @@
 import { Injectable, ForbiddenException} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto } from './dto/auth.dto';
+import { SignupDto, LoginDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { access } from 'fs';
+import { Role } from '@prisma/client';
 
 @Injectable({})
 export class AuthService {
@@ -16,12 +17,13 @@ export class AuthService {
   hashData(data: string) {
     return bcrypt.hash(data, 10);
   }
-  async generateToken(userId: number, email: string) {
+  async generateToken(userId: number, email: string, role: Role) {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: userId,
           email,
+          role,
         },
         {
             secret: 'at-secret',
@@ -32,6 +34,7 @@ export class AuthService {
         {
           sub: userId,
           email,
+          role,
         },
         { 
             secret: 'rt-secret',
@@ -46,17 +49,18 @@ export class AuthService {
   }
   
   //signup 
-  async signup(dto: AuthDto): Promise<Tokens> {
+  async signup(dto: SignupDto): Promise<Tokens> {
     const hash = await this.hashData(dto.password);
     const newUser = await this.prisma.user.create({
       data: {
         username: dto.userName,
         email: dto.email,
         hash: hash,
+        role: dto.role || Role.USER, // Use provided role or default to USER
       },
     });
 
-    const tokens = await this.generateToken(newUser.id, newUser.email);
+    const tokens = await this.generateToken(newUser.id, newUser.email, newUser.role);
     await this.updateRtHash(newUser.id, tokens.refresh_token);
 
     return tokens;
@@ -76,7 +80,7 @@ export class AuthService {
 
 
   //login
-  async login(dto: AuthDto): Promise<Tokens> {
+  async login(dto: LoginDto): Promise<Tokens> {
     const user = await this.prisma.user.findUnique({
         where: {
             email: dto.email
@@ -88,7 +92,7 @@ export class AuthService {
     const passwordMatches = await bcrypt.compare(dto.password, user.hash);
     if (!passwordMatches) throw new ForbiddenException("Access Denied. Password Incorrect!");
     
-    const tokens = await this.generateToken(user.id, user.email);
+    const tokens = await this.generateToken(user.id, user.email, user.role);
     await this.updateRtHash(user.id, tokens.refresh_token);
 
     return tokens;
@@ -122,7 +126,7 @@ export class AuthService {
     const rtMatches = await bcrypt.compare(rt, user.hashedRt);
     if (!rtMatches) throw new ForbiddenException('Access Denied');
 
-    const tokens = await this.generateToken(user.id, user.email);
+    const tokens = await this.generateToken(user.id, user.email, user.role);
     await this.updateRtHash(user.id, tokens.refresh_token);
 
     return tokens;

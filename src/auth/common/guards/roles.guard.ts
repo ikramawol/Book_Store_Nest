@@ -24,6 +24,7 @@ export class RolesGuard implements CanActivate {
             throw new ForbiddenException('Authentication required');
         }
 
+        console.log('User role:', user.role);
         if (!roles.includes(user.role)){
             throw new ForbiddenException('You do not have permission (role)');
         }

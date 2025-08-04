@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  // output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,53 +7,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Book{
-  id Int @id @default(autoincrement())
-  title String
+model Book {
+  id          Int        @id @default(autoincrement())
+  title       String
   description String
-  price Float
-  author String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  price       Float
+  author      String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  userBooks   UserBook[]
 
-  userBooks UserBook[]
   @@map("books")
-
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  username String
-  role Role @default(USER)
-  hash String
-  hashedRt String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  username  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  hash      String
+  hashedRt  String?
+  role      Role       @default(USER)
   userBooks UserBook[]
+
   @@map("users")
 }
 
-// Explicit junction table with additional fields
 model UserBook {
-  id Int @id @default(autoincrement())
-  userId Int
-  bookId Int
-  purchasedAt DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  bookId        Int
+  purchasedAt   DateTime @default(now())
   purchasePrice Float?
-  isFavorite Boolean @default(false)
-  
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
-  
+  isFavorite    Boolean  @default(false)
+  book          Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, bookId])
   @@map("user_books")
 }
- 
-enum Role{
+
+enum Role {
   MEMBER
   ADMIN
   USER
 }
-

@@ -12,11 +12,15 @@ export class BookService{
     }
 
     async getBookById(id: number){
-        return await this.prisma.book.findUnique({ where: { id }});
+        return await this.prisma.book.findUnique({ 
+            where: { id }
+        });
     }
     
     async createBook( data: CreateBookDto){
-        return await this.prisma.book.create({ data });
+        return await this.prisma.book.create({
+            data 
+        });
 
     }
 
@@ -28,6 +32,8 @@ export class BookService{
     }
 
     async deleteBook(id: number){
-        return await this.prisma.book.delete({ where: { id}});
+        return await this.prisma.book.delete({ 
+            where: { id }
+        });
     }
 }

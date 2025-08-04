@@ -45,6 +45,9 @@ export class BookController {
     @Roles('ADMIN')
     @Delete(':id')
     async deleteBook(@Param('id', ParseIntPipe)id: number){
-        return {message:'Book deleted successfully', book: await this.bookService.deleteBook(id)};
+        return {
+            message:'Book deleted successfully', 
+            book: await this.bookService.deleteBook(id)
+        };
     }
 }

@@ -1,5 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
+import { Role } from ".prisma/client/default";
 
 @Injectable({})
 export class UserService{
@@ -10,14 +11,39 @@ export class UserService{
     }
 
     async getUserById(id: number){
-        return await this.prismaService.user.findUnique({ where: { id }});
+        const user = await this.prismaService.user.findUnique({
+            where: { id }
+        });
+        if (!user) {
+            throw new NotFoundException(`User with ID ${id} not found`);
+        }
+        return user;
     }
 
     async updateUser(id: number, data: any){
-        return await this.prismaService.user.update({ where: { id }, data });
+        const user = await this.prismaService.user.findUnique({
+            where: { id }
+        });
+        if (!user) {
+            throw new NotFoundException(`User with ID ${id} not found`);
+        }
+        return await this.prismaService.user.update({
+            where: { id }, 
+            data 
+        });
     }
     
-    async changeRole(id: string, role: string){
-        return await this.prismaService.user.update()
+    async changeRole(id: number, role: Role){
+        const user = await this.prismaService.user.findUnique({
+            where: { id }
+        });
+
+        if (!user) {
+            throw new NotFoundException(`User with ID ${id} not found`);
+        }
+        return await this.prismaService.user.update({
+            where: { id },
+            data: { role }
+        });
     }
 }

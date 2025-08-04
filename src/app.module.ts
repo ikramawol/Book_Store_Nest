@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { BookModule } from './book/book.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -9,7 +10,15 @@ import { AtGuard } from './auth/common/guards/at.guard';
 import { RolesGuard } from './auth/common/guards/roles.guard';
 
 @Module({
-    imports: [BookModule, UserModule, AuthModule, PrismaModule],
+    imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
+        BookModule, 
+        UserModule, 
+        AuthModule, 
+        PrismaModule
+    ],
     providers: [
         PrismaService,
         {
