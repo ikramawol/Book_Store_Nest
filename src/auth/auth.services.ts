@@ -4,7 +4,6 @@ import { SignupDto, LoginDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
-import { access } from 'fs';
 import { Role } from '@prisma/client';
 
 @Injectable({})
@@ -17,6 +16,7 @@ export class AuthService {
   hashData(data: string) {
     return bcrypt.hash(data, 10);
   }
+  
   async generateToken(userId: number, email: string, role: Role) {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
@@ -26,7 +26,7 @@ export class AuthService {
           role,
         },
         {
-            secret: 'at-secret',
+            secret: process.env.JWT_ACCESS_SECRET,
             expiresIn: 60 * 15,
         },
       ),
@@ -36,8 +36,8 @@ export class AuthService {
           email,
           role,
         },
-        { 
-            secret: 'rt-secret',
+        {
+            secret: process.env.JWT_REFRESH_SECRET,
             expiresIn: 60 * 60 * 24 * 7,
         },
       ),
@@ -56,7 +56,7 @@ export class AuthService {
         username: dto.userName,
         email: dto.email,
         hash: hash,
-        role: dto.role || Role.USER, // Use provided role or default to USER
+        role: dto.role || Role.USER,
       },
     });
 

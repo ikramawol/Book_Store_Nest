@@ -16,6 +16,7 @@ export class AtGuard extends AuthGuard('jwt'){
         ]);
         if (isPublic)
             return true;
+        
         // If not public, proceed with the JWT authentication
         return super.canActivate(context);
     }

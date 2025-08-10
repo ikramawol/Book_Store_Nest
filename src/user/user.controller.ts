@@ -1,9 +1,9 @@
 import { Controller, Put, HttpStatus, HttpCode, Get, Patch, ParseIntPipe, Param } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Roles } from 'src/auth/common/decorators/indeex';
+import { Roles } from 'src/auth/common/decorators/index';
 import { Role } from '@prisma/client';
 import { Body } from '@nestjs/common/decorators/http/route-params.decorator';
-import { Public } from 'src/auth/common/decorators/public.decorator';
+import { Public } from 'src/auth/common/decorators/index';
 
 @Controller('user')
 export class UserController {

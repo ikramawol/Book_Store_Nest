@@ -3,7 +3,7 @@ import { BookService } from './book.service';
 import { CreateBookDto} from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Roles } from '../auth/common/decorators/roles.decorator';
-import { Public } from 'src/auth/common/decorators/indeex';
+import { Public } from 'src/auth/common/decorators/index';
 
 @Controller('book')
 export class BookController {
@@ -33,7 +33,7 @@ export class BookController {
         return await this.bookService.getBookById(id);
     }
 
-    @Roles('ADMIN')
+    @Roles('ADMIN', 'MEMBER')
     @Put(':id')
     async updateBook(
         @Param('id', ParseIntPipe) id: number,
@@ -42,7 +42,7 @@ export class BookController {
         }
     
     
-    @Roles('ADMIN')
+    @Roles('ADMIN', 'MEMBER')
     @Delete(':id')
     async deleteBook(@Param('id', ParseIntPipe)id: number){
         return {

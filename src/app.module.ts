@@ -8,6 +8,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { APP_GUARD } from '@nestjs/core';
 import { AtGuard } from './auth/common/guards/at.guard';
 import { RolesGuard } from './auth/common/guards/roles.guard';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
     imports: [
@@ -17,7 +18,8 @@ import { RolesGuard } from './auth/common/guards/roles.guard';
         BookModule, 
         UserModule, 
         AuthModule, 
-        PrismaModule
+        PrismaModule,
+        StripeModule
     ],
     providers: [
         PrismaService,
