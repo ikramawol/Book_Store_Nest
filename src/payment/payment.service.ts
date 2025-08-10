@@ -24,13 +24,13 @@ export class PaymentService {
   }
 
   async getOrderById(id: number) {
-    console.log(`PaymentService: Looking for order with ID: ${id}`);
+    // console.log(`PaymentService: Looking for order with ID: ${id}`);
     try {
       const order = await this.prisma.order.findUnique({ where: { id } });
-      console.log(`PaymentService: Found order:`, order);
+      // console.log(`PaymentService: Found order:`, order);
       return order;
     } catch (error) {
-      console.error('PaymentService: Database error:', error);
+      // console.error('PaymentService: Database error:', error);
       throw error;
     }
   }

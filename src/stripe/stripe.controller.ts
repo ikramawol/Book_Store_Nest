@@ -48,7 +48,7 @@ export class StripeController {
     try {
       event = this.stripeService.constructWebhookEvent(req.body, sig);
     } catch (err) {
-      console.log('Webhook signature verification failed, trying mock webhook...');
+      // console.log('Webhook signature verification failed, trying mock webhook...');
       // For testing purposes, try to handle as mock webhook
       try {
         event = req.body as Stripe.Event;

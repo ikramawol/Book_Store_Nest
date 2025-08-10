@@ -16,7 +16,7 @@ export class AuthService {
   hashData(data: string) {
     return bcrypt.hash(data, 10);
   }
-  
+
   async generateToken(userId: number, email: string, role: Role) {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
@@ -26,8 +26,8 @@ export class AuthService {
           role,
         },
         {
-            secret: process.env.JWT_ACCESS_SECRET,
-            expiresIn: 60 * 15,
+          secret: process.env.JWT_ACCESS_SECRET,
+          expiresIn: 60 * 15,
         },
       ),
       this.jwtService.signAsync(
@@ -37,8 +37,8 @@ export class AuthService {
           role,
         },
         {
-            secret: process.env.JWT_REFRESH_SECRET,
-            expiresIn: 60 * 60 * 24 * 7,
+          secret: process.env.JWT_REFRESH_SECRET,
+          expiresIn: 60 * 60 * 24 * 7,
         },
       ),
     ]);
@@ -50,6 +50,20 @@ export class AuthService {
   
   //signup 
   async signup(dto: SignupDto): Promise<Tokens> {
+    const existingUser = await this.prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      }
+    })
+    if (existingUser){
+      throw new Error('User already exists');
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(dto.email)) {
+          throw new Error('Invalid email format');
+      }
+
     const hash = await this.hashData(dto.password);
     const newUser = await this.prisma.user.create({
       data: {

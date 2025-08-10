@@ -6,9 +6,13 @@ import { Injectable } from "@nestjs/common";
 @Injectable()
 export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh'){
     constructor(){
+        const rtSecret = process.env.JWT_REFRESH_SECRET;
+        if (!rtSecret) {
+            throw new Error('JWT_REFRESH_SECRET environment variable is not defined');
+        }
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: 'rt-secret',
+            secretOrKey: rtSecret,
             passReqToCallback: true,
         })
     }

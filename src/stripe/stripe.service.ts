@@ -22,7 +22,7 @@ export class StripeService {
     metadata: Record<string, any>
   ): Promise<Stripe.PaymentIntent> {
     return this.stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // Convert to cents
+      amount: Math.round(amount * 100),
       currency: currency.toLowerCase(),
       metadata,
       automatic_payment_methods: {
