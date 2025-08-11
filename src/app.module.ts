@@ -9,6 +9,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AtGuard } from './auth/common/guards/at.guard';
 import { RolesGuard } from './auth/common/guards/roles.guard';
 import { StripeModule } from './stripe/stripe.module';
+import { ReviewModule } from './review/review.module';
 
 @Module({
     imports: [
@@ -19,7 +20,8 @@ import { StripeModule } from './stripe/stripe.module';
         UserModule, 
         AuthModule, 
         PrismaModule,
-        StripeModule
+        StripeModule,
+        ReviewModule,
     ],
     providers: [
         PrismaService,

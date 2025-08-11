@@ -6,7 +6,7 @@ import * as bodyParser from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true, forbidNonWhitelisted: false }));
   // const reflector = app.get(Reflector);
   // app.useGlobalGuards(new AtGuard(reflector))
   await app.listen(3333);
