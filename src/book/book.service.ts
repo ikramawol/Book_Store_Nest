@@ -124,5 +124,8 @@ export class BookService{
             },
         });
     }
+
+    async findByTitle(title: string) {
+        return await this.prisma.book.findFirst({ where: { title } });
+    }
 }
-       

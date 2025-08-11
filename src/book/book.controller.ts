@@ -20,6 +20,16 @@ export class BookController {
   @Roles('ADMIN', 'MEMBER')
   @Post()
   async createBook(@Body() dto: CreateBookDto) {
+
+    try{
+
+      const existingBook = await this.bookService.findByTitle(dto.title);
+      if (existingBook){
+        throw new Error('Book with this title already exists');
+      }
+    } catch (error) {
+      throw new Error('Error creating book');
+    }
     return await this.bookService.createBook(dto);
   }
 
@@ -41,6 +51,14 @@ export class BookController {
   @Public()
   @Get(':id')
   async getBookById(@Param('id', ParseIntPipe) id: number) {
+    try{
+      if (!id) throw Error ('Book ID is required');
+      const book = await this.bookService.getBookById(id);
+      if (!book) throw Error ('Book not found');
+
+    } catch(error){
+      throw new Error('Error fetching book');
+    }
     return await this.bookService.getBookById(id);
   }
 
@@ -50,12 +68,19 @@ export class BookController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateBookDto,
   ) {
+
+    const book = await this.bookService.getBookById(id);
+    if (!book) throw new Error('Book not found');
+
     return await this.bookService.updateBook(id, dto);
   }
 
   @Roles('ADMIN', 'MEMBER')
   @Delete(':id')
   async deleteBook(@Param('id', ParseIntPipe) id: number) {
+    const book = await this.bookService.getBookById(id);
+    if (!book) throw new Error('Book not found');
+
     return {
       message: 'Book deleted successfully',
       book: await this.bookService.deleteBook(id),
