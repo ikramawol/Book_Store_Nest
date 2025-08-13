@@ -47,4 +47,9 @@ export class PaymentService {
       data: { paymentIntentId },
     });
   }
+  
+  async findBookById(bookId: number) {
+    return this.prisma.book.findUnique({ where: { id: bookId } });
+  }
 }
+

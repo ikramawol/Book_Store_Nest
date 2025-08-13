@@ -1,7 +1,7 @@
 import { CreateReviewDto, UpdateReviewDto } from "./dto";
 import { ReviewService } from "./review.service";
 import { BookService } from "../book/book.service";
-import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe } from '@nestjs/common'
+import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe, BadGatewayException } from '@nestjs/common'
 import { Public, GetCurrentUserId } from 'src/auth/common/decorators/index';
 
 
@@ -19,12 +19,12 @@ export class ReviewController {
             if (!dto.bookId) throw new Error('Book ID is required');
 
             const book = await this.bookService.getBookById(dto.bookId);
-            if (!book) throw new Error(`Book with ID ${dto.bookId} not found`);
+            if (!book) throw new BadGatewayException(`Book with ID ${dto.bookId} not found`);
 
             const existingReview = await this.reviewService.getReviewByBook(dto.bookId);
-            if (existingReview) throw new Error(`Review for book ${dto.bookId} already exists`);            
+            if (existingReview) throw new BadGatewayException(`Review for book ${dto.bookId} already exists`);
         } catch(error) {
-
+            throw new BadGatewayException('Error creating review');
         }
         return await this.reviewService.createReview(dto, userId);
     }

@@ -78,6 +78,7 @@ export class BookController {
   @Roles('ADMIN', 'MEMBER')
   @Delete(':id')
   async deleteBook(@Param('id', ParseIntPipe) id: number) {
+    
     const book = await this.bookService.getBookById(id);
     if (!book) throw new Error('Book not found');
 

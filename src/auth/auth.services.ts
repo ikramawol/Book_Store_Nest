@@ -1,4 +1,4 @@
-import { Injectable, ForbiddenException} from '@nestjs/common';
+import { Injectable, ForbiddenException, BadRequestException} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SignupDto, LoginDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
@@ -56,12 +56,12 @@ export class AuthService {
       }
     })
     if (existingUser){
-      throw new Error('User already exists');
+      throw new BadRequestException('User already exists');
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(dto.email)) {
-          throw new Error('Invalid email format');
+          throw new BadRequestException('Invalid email format');
       }
 
     const hash = await this.hashData(dto.password);
@@ -127,6 +127,7 @@ export class AuthService {
             hashedRt: null,
         }
     })
+    return { message: 'Logout successful' }
 }
 
   async refreshToken(userId: number, rt: string) {
